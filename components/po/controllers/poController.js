@@ -78,7 +78,6 @@ exports.getAmount = (req, res, next) => {
     .then((foundPr) => {
       if (foundPr) {
         req.body.amount = foundPr.amount;
-        console.log("punda1");
         next();
       } else {
         res.status(404).json({
@@ -470,3 +469,23 @@ exports.deleteOnePo = (req,res,next)=>{
     }
   })
 }
+
+exports.validatePoForDeliveryOrder = (req, res, next) => {
+ 
+  PurchaseOrder.findOne({
+    poid: req.body.poid,
+  })
+    .exec()
+    .then((poObject) => {
+      if (poObject) {
+        next()
+       
+      } else {
+        res.status(404).json({
+          error: "Purchase Order does not exist",
+          code: "PURCHASE_ORDER_DOES_NOT_EXIST"
+        });
+      }
+    });
+};
+
